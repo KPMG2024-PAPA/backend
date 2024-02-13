@@ -11,7 +11,7 @@ session = engine.create_session()
 
 app.include_router(patent_router)
 
-@app.get("/test")
+@app.get("/")
 def test():
     return {"message": "Hello World"}
 
