@@ -2,6 +2,8 @@ from fastapi import FastAPI, File, Form, UploadFile
 from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+from gpt.submit_gpt import submit_spec as submit_spec_gpt
+
 
 app = FastAPI()
 
@@ -39,7 +41,16 @@ async def submit_spec(text: str = Form(...), file: Optional[UploadFile] = File(N
         print(f"Received file with size: {len(file_contents)} bytes")
 
     # You can return a response to acknowledge the receipt
-    return {"message": "Received the spec successfully", "text": text, "file": file.filename if file else "No file uploaded"}
+    response = submit_spec_gpt(text, file_contents)
+    print(response)
+
+    return {
+        "message": "Received the spec successfully and processed",
+        "text": text,
+        "file": file.filename if file else "No file uploaded",
+        # Assuming you want to include the response from GPT in your API response
+        "gpt_response": response
+    }
 
 
 @app.get("/test")
