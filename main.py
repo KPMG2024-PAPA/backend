@@ -4,6 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from gpt.submit_gpt import submit_spec as submit_spec_gpt
 from pydantic import BaseModel
+# Adjust import path as needed
+from researchpage.keybert_for_dashboard import keyword_extractor
 
 
 app = FastAPI()
@@ -59,12 +61,39 @@ class ResearchInput(BaseModel):
 
 
 @app.post("/research-page-main")
+async def keybert(input_data: ResearchInput):
+    input_text = input_data.inputValue
+    print(input_text)
+    # Now you can use input_text for your processing
+    # Call the keyword_extractor function
+    extracted_keywords = keyword_extractor(input_text)
+    print(extracted_keywords)
+
+    return {"message": f"{extracted_keywords}"}
+
+
+@app.post("/research-page-sub-news")
 async def submit_spec(input_data: ResearchInput):
     input_text = input_data.inputValue
     print(input_text)
     # Now you can use input_text for your processing
-    # For example, let's just return a simple response for demonstration
-    return {"message": f"Received input: {input_text}"}
+    # Call the keyword_extractor function
+    extracted_keywords = keyword_extractor(input_text)
+    print("news " + extracted_keywords)
+
+    return {"message": f"{extracted_keywords}"}
+
+
+@app.post("/research-page-sub-papers")
+async def submit_spec(input_data: ResearchInput):
+    input_text = input_data.inputValue
+    print(input_text)
+    # Now you can use input_text for your processing
+    # Call the keyword_extractor function
+    extracted_keywords = keyword_extractor(input_text)
+    print("papers " + extracted_keywords)
+
+    return {"message": f"{extracted_keywords}"}
 
 
 @app.get("/test")
