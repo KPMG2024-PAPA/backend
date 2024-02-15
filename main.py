@@ -6,6 +6,7 @@ from gpt.submit_gpt import submit_spec as submit_spec_gpt
 from pydantic import BaseModel
 # Adjust import path as needed
 from researchpage.keybert_for_dashboard import keyword_extractor
+from researchpage.naver_news import naver_news
 
 
 app = FastAPI()
@@ -77,11 +78,12 @@ async def submit_spec(input_data: ResearchInput):
     input_text = input_data.inputValue
     print(input_text)
     # Now you can use input_text for your processing
-    # Call the keyword_extractor function
-    extracted_keywords = keyword_extractor(input_text)
-    print("news " + extracted_keywords)
+    # Call the naver_news function
+    news = naver_news(input_text)
+    for num, n in enumerate(news, start=1):
+        print(num, n)
 
-    return {"message": f"{extracted_keywords}"}
+    return {"message": f"{news}"}
 
 
 @app.post("/research-page-sub-papers")
