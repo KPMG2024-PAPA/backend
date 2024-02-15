@@ -3,6 +3,7 @@ from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from gpt.submit_gpt import submit_spec as submit_spec_gpt
+from pydantic import BaseModel
 
 
 app = FastAPI()
@@ -51,6 +52,19 @@ async def submit_spec(text: str = Form(...), file: Optional[UploadFile] = File(N
         # Assuming you want to include the response from GPT in your API response
         "gpt_response": response
     }
+
+
+class ResearchInput(BaseModel):
+    inputValue: str
+
+
+@app.post("/research-page-main")
+async def submit_spec(input_data: ResearchInput):
+    input_text = input_data.inputValue
+    print(input_text)
+    # Now you can use input_text for your processing
+    # For example, let's just return a simple response for demonstration
+    return {"message": f"Received input: {input_text}"}
 
 
 @app.get("/test")
