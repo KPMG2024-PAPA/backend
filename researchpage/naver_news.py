@@ -22,7 +22,8 @@ import requests
 def naver_news(input: list) -> list:
     """
 
-    keyword extractor에서 반환 받은 keyword list를 이용하여 네이버에서 뉴스을 검색하는 함수
+    keyword extractor에서 반환 받은 [(날개, 0.3), (선풍기, 0.15), (다이슨, 0.05), (에너지,0.03)]에서
+    스코어가 0.3 이상인 것만 네이버에서 뉴스을 검색하는 함수
     그런데 keyword extractor에서 반환 받은 keyword가 많기 때문에 동시에 이걸 충족하는 뉴스가 없을 수도 있음 주의(검색 결과 없음)
 
     """
@@ -31,7 +32,9 @@ def naver_news(input: list) -> list:
     driver = webdriver.Chrome(service=Service(
         ChromeDriverManager().install()), options=options)
 
-    search_keyword = input
+    
+    percentile_60 = np.percentile([i[1] for i in input],60)
+    search_keyword = "+".join([i[0] for i in input if i[1] >= percentile_60])
 
     url = f'https://search.naver.com/search.naver?where=news&ie=utf8&sm=nws_hty&query={search_keyword}+특허'
     driver.get(url)
@@ -65,3 +68,8 @@ def naver_news(input: list) -> list:
         title_link.append(temp)
 
     return title_link
+
+
+print(naver_news([('카메라', 0.5805), ('렌즈', 0.4405), ('무선', 0.4336), ('디지털', 0.4151), 
+                        ('기기', 0.3814), ('방사', 0.3422), ('통신', 0.296), ('금속', 0.2955), 
+                        ('촬영', 0.2681), ('물질', 0.2553)]))
