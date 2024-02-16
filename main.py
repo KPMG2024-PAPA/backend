@@ -69,8 +69,12 @@ class ResearchInput(BaseModel):
     inputValue: List[Keyword]
 
 
+class StrInput(BaseModel):
+    inputValue: str
+
+
 @app.post("/research-page-main")
-async def keybert(input_data: ResearchInput):
+async def keybert(input_data: StrInput):
     input_text = input_data.inputValue
     print(input_text)
     # Now you can use input_text for your processing
