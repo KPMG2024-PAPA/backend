@@ -1,8 +1,13 @@
 from fastapi import FastAPI, File, Form, UploadFile
-from typing import Optional
+from typing import Optional, List
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from gpt.submit_gpt import submit_spec as submit_spec_gpt
+from pydantic import BaseModel
+# Adjust import path as needed
+from researchpage.keybert_for_dashboard import keyword_extractor
+from researchpage.naver_news import naver_news
+from researchpage.dbpia_api import get_dbpia_papers
 
 
 app = FastAPI()
@@ -51,6 +56,51 @@ async def submit_spec(text: str = Form(...), file: Optional[UploadFile] = File(N
         # Assuming you want to include the response from GPT in your API response
         "gpt_response": response
     }
+
+# Pedantic model for the input data
+
+
+class Keyword(BaseModel):
+    keyword: str
+    score: float
+
+
+class ResearchInput(BaseModel):
+    inputValue: List[Keyword]
+
+
+class StrInput(BaseModel):
+    inputValue: str
+
+
+@app.post("/research-page-main")
+async def keybert(input_data: StrInput):
+    input_text = input_data.inputValue
+    print(input_text)
+    # Now you can use input_text for your processing
+    # Call the keyword_extractor function
+    extracted_keywords = keyword_extractor(input_text)
+    print(extracted_keywords)
+
+    return {"message": f"{extracted_keywords}"}
+
+
+@app.post("/research-page-sub-news")
+async def submit_spec(input_data: ResearchInput):
+    input_text = input_data.inputValue
+    # Call the naver_news function
+    news = naver_news(input_text)
+    return {"message": news}
+
+
+@app.post("/research-page-sub-papers")
+async def submit_spec(input_data: ResearchInput):
+    input_text = input_data.inputValue
+    # Now you can use input_text for your processing
+    # Call the keyword_extractor function
+    papers = get_dbpia_papers(input_text)
+
+    return {"message": papers}
 
 
 @app.get("/test")
