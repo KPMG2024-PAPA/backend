@@ -7,6 +7,7 @@ from pydantic import BaseModel
 # Adjust import path as needed
 from researchpage.keybert_for_dashboard import keyword_extractor
 from researchpage.naver_news import naver_news
+from researchpage.dbpia_api import get_dbpia_papers
 
 
 app = FastAPI()
@@ -76,26 +77,21 @@ async def keybert(input_data: ResearchInput):
 @app.post("/research-page-sub-news")
 async def submit_spec(input_data: ResearchInput):
     input_text = input_data.inputValue
-    print(input_text)
-    # Now you can use input_text for your processing
     # Call the naver_news function
     news = naver_news(input_text)
-    for num, n in enumerate(news, start=1):
-        print(num, n)
-
     return {"message": f"{news}"}
 
 
 @app.post("/research-page-sub-papers")
 async def submit_spec(input_data: ResearchInput):
     input_text = input_data.inputValue
+    print("THIS IS THE PAPER")
     print(input_text)
     # Now you can use input_text for your processing
     # Call the keyword_extractor function
-    extracted_keywords = keyword_extractor(input_text)
-    print("papers " + extracted_keywords)
+    papers = get_dbpia_papers(input_text)
 
-    return {"message": f"{extracted_keywords}"}
+    return {"message": papers}
 
 
 @app.get("/test")
