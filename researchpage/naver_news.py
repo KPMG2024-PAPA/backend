@@ -28,13 +28,17 @@ def naver_news(input: list) -> list:
 
     """
 
+    print(input)
     options = webdriver.ChromeOptions()
     driver = webdriver.Chrome(service=Service(
         ChromeDriverManager().install()), options=options)
 
-    
-    percentile_60 = np.percentile([i[1] for i in input],60)
-    search_keyword = "+".join([i[0] for i in input if i[1] >= percentile_60])
+    # Calculate the 60th percentile of scores
+    percentile_60 = np.percentile([item.score for item in input], 60)
+
+    # Create a search keyword string for keywords with scores >= 60th percentile
+    search_keyword = "+".join(
+        [item.keyword for item in input if item.score >= percentile_60])
 
     url = f'https://search.naver.com/search.naver?where=news&ie=utf8&sm=nws_hty&query={search_keyword}+특허'
     driver.get(url)
@@ -70,6 +74,6 @@ def naver_news(input: list) -> list:
     return title_link
 
 
-print(naver_news([('카메라', 0.5805), ('렌즈', 0.4405), ('무선', 0.4336), ('디지털', 0.4151), 
-                        ('기기', 0.3814), ('방사', 0.3422), ('통신', 0.296), ('금속', 0.2955), 
-                        ('촬영', 0.2681), ('물질', 0.2553)]))
+# print(naver_news([('카메라', 0.5805), ('렌즈', 0.4405), ('무선', 0.4336), ('디지털', 0.4151),
+#                   ('기기', 0.3814), ('방사', 0.3422), ('통신', 0.296), ('금속', 0.2955),
+#                   ('촬영', 0.2681), ('물질', 0.2553)]))

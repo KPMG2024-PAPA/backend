@@ -90,7 +90,7 @@ async def submit_spec(input_data: ResearchInput):
     input_text = input_data.inputValue
     # Call the naver_news function
     news = naver_news(input_text)
-    return {"message": f"{news}"}
+    return {"message": news}
 
 
 @app.post("/research-page-sub-papers")
