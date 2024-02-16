@@ -2,17 +2,23 @@ import requests
 import xml.etree.ElementTree as ET
 
 
-def get_dbpia_papers(search_keyword_list: str) -> list:
+def get_dbpia_papers(search_keyword_list: list) -> list:
+    
     """
     keyword extractor에서 반환 받은 keyword를 이용하여 dbpia에서 논문을 검색하는 함수
+    [(날개, 0.3), (선풍기, 0.15), (다이슨, 0.05), (에너지,0.03)]
     그런데 keyword extractor에서 반환 받은 keyword가 많기 때문에 동시에 이걸 충족하는 논문이 없을 수 있음 (검색 결과 없음)
     따러서 안전하게 총 5개의 키워드를 반환해줬다면 5개씩 쪼개서 검색바에 넣을 것임.
 
     """
-    search_keyword_list = search_keyword_list.split("+")
+    
+    search_keyword_comb = [i[0] for i in search_keyword_list if i[1] > 0.3]
+   
+   
+    # search_keyword_list = search_keyword_list.split("+")
 
-    search_keyword_comb = ["+".join(search_keyword_list),
-                           "+".join(search_keyword_list[::2]), "+".join(search_keyword_list[1::2])]
+    # search_keyword_comb = ["+".join(search_keyword_list),
+                        #    "+".join(search_keyword_list[::2]), "+".join(search_keyword_list[1::2])]
 
     # 10개 전부, 앞에 5개만, 짝수번째 키워드만, 홀수번째 키워드만
 
@@ -104,10 +110,14 @@ def get_dbpia_papers(search_keyword_list: str) -> list:
 
         else:
             # print("Error:", response.status_code)
-            continue
+            
+            search_keyword_comb.pop()
 
 
 # print(get_dbpia_papers(['날개', '선풍기', '다이슨', '날개','소음', '발생', '무게', '전력', '소비', '에너지', '효율']))
 # print(get_dbpia_papers("날개+선풍기+다이슨+날개+소음+발생+무게+전력+소비+에너지+효율"))
 # print(get_dbpia_papers("에너지+날개+효율+전력+소음+선풍기+무게+소비+다이슨+발생"))
-print(get_dbpia_papers("카메라+렌즈+무선+디지털+기기+방사+통신+금속+촬영+물질"))
+
+print(get_dbpia_papers([('카메라', 0.5805), ('렌즈', 0.4405), ('무선', 0.4336), ('디지털', 0.4151), 
+                        ('기기', 0.3814), ('방사', 0.3422), ('통신', 0.296), ('금속', 0.2955), 
+                        ('촬영', 0.2681), ('물질', 0.2553)]))
