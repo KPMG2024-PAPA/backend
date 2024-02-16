@@ -1,30 +1,17 @@
 import requests
 import xml.etree.ElementTree as ET
-import difflib
 
 
 def get_dbpia_papers(search_keyword_list: str) -> list:
     """
     keyword extractor에서 반환 받은 keyword를 이용하여 dbpia에서 논문을 검색하는 함수
     그런데 keyword extractor에서 반환 받은 keyword가 많기 때문에 동시에 이걸 충족하는 논문이 없을 수 있음 (검색 결과 없음)
-    따러서 안전하게 총 10개의 키워드를 반환해줬다면 5개씩 쪼개서 검색바에 넣을 것임.
+    따러서 안전하게 총 5개의 키워드를 반환해줬다면 5개씩 쪼개서 검색바에 넣을 것임.
 
     """
-    print("AAAAAAAAAAAAAAAA")
-    print(search_keyword_list)
-    hard = "에너지+날개+효율+전력+소음+선풍기+무게+소비+다이슨+발생"
-    print(type(search_keyword_list))
-    print(type(hard))
-    d = difflib.Differ()
-    diff = d.compare(hard, search_keyword_list)
-    print('\n'.join(diff))
-
-    # search_keyword_list = "날개+선풍기+다이슨+날개+소음+발생+무게+전력+소비+에너지+효율"
-    print("are they equal?", hard == search_keyword_list)
-
     search_keyword_list = search_keyword_list.split("+")
 
-    search_keyword_comb = ["+".join(search_keyword_list), "+".join(search_keyword_list[:5]),
+    search_keyword_comb = ["+".join(search_keyword_list),
                            "+".join(search_keyword_list[::2]), "+".join(search_keyword_list[1::2])]
 
     # 10개 전부, 앞에 5개만, 짝수번째 키워드만, 홀수번째 키워드만
@@ -80,16 +67,29 @@ def get_dbpia_papers(search_keyword_list: str) -> list:
             for item in root.findall('.//item'):
                 temp = []
 
-                title = item.find('title').text
-                link_url = item.find('link_url').text
-                # Path to publication name
-                publication_name = item.find('.//publication/name').text
-                publication_date = item.find('.//issue/yymm').text
+                # Path to publication title
+                title_element = item.find('title')
+                title = title_element.text if title_element is not None else "No title"
 
-                # print(f"Title: {title.replace('<!HS>','').replace('<!HE>','')}")
-                # print(f"Publication: {publication_name.replace('<!HS>','').replace('<!HE>','')}")
-                # print(f"Publication Date: {publication_date}")
-                # print(f"Link: {link_url}")
+                # Path to publication link
+                link_url_element = item.find('link_url')
+                link_url = link_url_element.text if link_url_element is not None else "No link"
+
+                # Path to publication name
+                publication_element = item.find('.//publication/name')
+                publication_name = publication_element.text if publication_element.text is not None else "No publication name"
+
+                # Path to publication date
+                publication_date_element = item.find('.//issue/yymm')
+                publication_date = publication_date_element.text if publication_date_element is not None else "No publication date"
+
+                # DEBUGGER: Print the title and link_url
+                print(
+                    f"Title: {title.replace('<!HS>','').replace('<!HE>','')}")
+                print(
+                    f"Publication: {publication_name.replace('<!HS>','').replace('<!HE>','')}")
+                print(f"Publication Date: {publication_date}")
+                print(f"Link: {link_url}")
 
                 temp.append(title.replace('<!HS>', '').replace('<!HE>', ''))
                 temp.append(publication_name.replace(
@@ -99,7 +99,7 @@ def get_dbpia_papers(search_keyword_list: str) -> list:
 
                 result.append(temp)
 
-            print(result)
+            # print(result)
             return result
 
         else:
@@ -107,5 +107,7 @@ def get_dbpia_papers(search_keyword_list: str) -> list:
             continue
 
 
-# print(get_dbpia_papers(['날개', '선풍기', '다이슨', '날개', '소음','발생', '무게', '전력', '소비', '에너지', '효율']))
+# print(get_dbpia_papers(['날개', '선풍기', '다이슨', '날개','소음', '발생', '무게', '전력', '소비', '에너지', '효율']))
 # print(get_dbpia_papers("날개+선풍기+다이슨+날개+소음+발생+무게+전력+소비+에너지+효율"))
+# print(get_dbpia_papers("에너지+날개+효율+전력+소음+선풍기+무게+소비+다이슨+발생"))
+print(get_dbpia_papers("카메라+렌즈+무선+디지털+기기+방사+통신+금속+촬영+물질"))
