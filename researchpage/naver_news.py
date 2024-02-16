@@ -27,8 +27,6 @@ def naver_news(input: list) -> list:
     그런데 keyword extractor에서 반환 받은 keyword가 많기 때문에 동시에 이걸 충족하는 뉴스가 없을 수도 있음 주의(검색 결과 없음)
 
     """
-
-    print(input)
     options = webdriver.ChromeOptions()
     driver = webdriver.Chrome(service=Service(
         ChromeDriverManager().install()), options=options)
