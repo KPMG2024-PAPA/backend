@@ -45,7 +45,7 @@ def get_dbpia_papers(search_keyword_list: list) -> list:
 
         # Make the GET request
         response = requests.get(url, params=params)
-        print(response)
+        # print(response)
 
         # Check if the request was successful
 
@@ -83,12 +83,12 @@ def get_dbpia_papers(search_keyword_list: list) -> list:
                 publication_date = publication_date_element.text if publication_date_element is not None else "No publication date"
 
                 # DEBUGGER: Print the title and link_url
-                print(
-                    f"Title: {title.replace('<!HS>','').replace('<!HE>','')}")
-                print(
-                    f"Publication: {publication_name.replace('<!HS>','').replace('<!HE>','')}")
-                print(f"Publication Date: {publication_date}")
-                print(f"Link: {link_url}")
+                # print(
+                #     f"Title: {title.replace('<!HS>','').replace('<!HE>','')}")
+                # print(
+                #     f"Publication: {publication_name.replace('<!HS>','').replace('<!HE>','')}")
+                # print(f"Publication Date: {publication_date}")
+                # print(f"Link: {link_url}")
 
                 temp.append(title.replace('<!HS>', '').replace('<!HE>', ''))
                 temp.append(publication_name.replace(
