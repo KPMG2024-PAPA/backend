@@ -79,8 +79,10 @@ def keyword_extractor(input: str) -> str:
     ]
 
     keywords = kw_model.extract_keywords(
-        nouns_text, keyphrase_ngram_range=(1, 1), stop_words=stop_words, top_n=10)
+        nouns_text, keyphrase_ngram_range=(1, 1), stop_words=stop_words, top_n=5)
 
     result_keywords = "+".join([keyword[0] for keyword in keywords])
 
     return result_keywords
+
+# print(keyword_extractor("날개가 없는 선풍기를 만들고 있습니다. 다이슨과 같이 날개가 없어 소음이 적게 발생하고 무게가 가벼워집니다. 또한, 전력 소비가 줄어들어 에너지 효율이 높아집니다."))
