@@ -3,6 +3,7 @@
 from keybert import KeyBERT
 from kiwipiepy import Kiwi
 from transformers import BertModel
+import json
 
 
 def keyword_extractor(input: str) -> list:
@@ -13,12 +14,12 @@ def keyword_extractor(input: str) -> list:
     예시:
     날개가 없는 선풍기를 만들고 있습니다. 다이슨과 같이 날개가 없어 소음이 적게 발생하고 무게가 가벼워집니다. 또한, 전력 소비가 줄어들어 에너지 효율이 높아집니다. 
 
-    위와 같은 문장은 다음과 같이 결과가 나오게 됩니다. 
+    위와 같은 문장은 다음과 같이 결과가 나오게 됩니다.
 
     [(날개, 0.3), (선풍기, 0.5), (다이슨, 0.2)...]
 
     """
-    
+
     text = input
 
     # text="""
@@ -81,8 +82,13 @@ def keyword_extractor(input: str) -> list:
     keywords = kw_model.extract_keywords(
         nouns_text, keyphrase_ngram_range=(1, 1), stop_words=stop_words, top_n=10)
 
+    # Convert the list of tuples to a list of dictionaries for JSON serialization
+    keywords_list = [{"keyword": kw, "score": score} for kw, score in keywords]
 
-    return keywords
+    json_string = json.dumps(keywords_list)
+
+    return json_string
+
 
 # print(keyword_extractor("날개가 없는 선풍기를 만들고 있습니다. 다이슨과 같이 날개가 없어 소음이 적게 발생하고 무게가 가벼워집니다. 또한, 전력 소비가 줄어들어 에너지 효율이 높아집니다."))
-print(keyword_extractor("본 발명의 일 실시예에 따른 외부 기기와의 무선 통신을 수행할 수 있는 디지털 카메라에 있어서, 카메라 본체 및 카메라 본체에 장착되며, 복수의 촬영 렌즈들을 수용하는 복수의 배럴들을 가진 렌즈 배럴 조립체를 포함하며, 복수의 배럴들 중 어느 하나는 무선 통신을 위한 안테나 기능을 가진 안테나 배럴로 사용되며, 안테나 배럴이 안테나 기능을 수행하기 위한 전파를 방사할 수 있도록, 안테나 배럴은 금속 물질로 이루어지고 안테나 배럴에는 유전체 물질로 채워진 적어도 하나의 슬릿이 형성되며, 안테나 배럴의 외측 표면을 둘러싸는 카메라 본체의 외부 케이싱 부분은, 안테나 배럴의 그라운드로 기능하도록 금속 물질로 이루어지는 것을 특징으로 한다."))
+# print(keyword_extractor("본 발명의 일 실시예에 따른 외부 기기와의 무선 통신을 수행할 수 있는 디지털 카메라에 있어서, 카메라 본체 및 카메라 본체에 장착되며, 복수의 촬영 렌즈들을 수용하는 복수의 배럴들을 가진 렌즈 배럴 조립체를 포함하며, 복수의 배럴들 중 어느 하나는 무선 통신을 위한 안테나 기능을 가진 안테나 배럴로 사용되며, 안테나 배럴이 안테나 기능을 수행하기 위한 전파를 방사할 수 있도록, 안테나 배럴은 금속 물질로 이루어지고 안테나 배럴에는 유전체 물질로 채워진 적어도 하나의 슬릿이 형성되며, 안테나 배럴의 외측 표면을 둘러싸는 카메라 본체의 외부 케이싱 부분은, 안테나 배럴의 그라운드로 기능하도록 금속 물질로 이루어지는 것을 특징으로 한다."))

@@ -1,5 +1,5 @@
 from fastapi import FastAPI, File, Form, UploadFile
-from typing import Optional
+from typing import Optional, List
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from gpt.submit_gpt import submit_spec as submit_spec_gpt
@@ -57,9 +57,16 @@ async def submit_spec(text: str = Form(...), file: Optional[UploadFile] = File(N
         "gpt_response": response
     }
 
+# Pedantic model for the input data
+
+
+class Keyword(BaseModel):
+    keyword: str
+    score: float
+
 
 class ResearchInput(BaseModel):
-    inputValue: str
+    inputValue: List[Keyword]
 
 
 @app.post("/research-page-main")
@@ -85,8 +92,6 @@ async def submit_spec(input_data: ResearchInput):
 @app.post("/research-page-sub-papers")
 async def submit_spec(input_data: ResearchInput):
     input_text = input_data.inputValue
-    print("THIS IS THE PAPER")
-    print(input_text)
     # Now you can use input_text for your processing
     # Call the keyword_extractor function
     papers = get_dbpia_papers(input_text)

@@ -3,7 +3,6 @@ import xml.etree.ElementTree as ET
 
 
 def get_dbpia_papers(search_keyword_list: list) -> list:
-    
     """
     keyword extractor에서 반환 받은 keyword를 이용하여 dbpia에서 논문을 검색하는 함수
     [(날개, 0.3), (선풍기, 0.15), (다이슨, 0.05), (에너지,0.03)]
@@ -11,14 +10,9 @@ def get_dbpia_papers(search_keyword_list: list) -> list:
     따러서 안전하게 총 5개의 키워드를 반환해줬다면 5개씩 쪼개서 검색바에 넣을 것임.
 
     """
-    
-    search_keyword_comb = [i[0] for i in search_keyword_list if i[1] > 0.3]
-   
-   
-    # search_keyword_list = search_keyword_list.split("+")
-
-    # search_keyword_comb = ["+".join(search_keyword_list),
-                        #    "+".join(search_keyword_list[::2]), "+".join(search_keyword_list[1::2])]
+    # Adjusted to access attributes of Keyword objects
+    search_keyword_comb = [
+        kw.keyword for kw in search_keyword_list if kw.score > 0.3]
 
     # 10개 전부, 앞에 5개만, 짝수번째 키워드만, 홀수번째 키워드만
 
@@ -64,7 +58,6 @@ def get_dbpia_papers(search_keyword_list: list) -> list:
             root = ET.fromstring(response.text)
 
             # Find all item elements and extract titles and link_urls
-
             result = []
 
             # 모든 논문에 대한 모든 정보를 담을 리스트
@@ -105,12 +98,11 @@ def get_dbpia_papers(search_keyword_list: list) -> list:
 
                 result.append(temp)
 
-            # print(result)
             return result
 
         else:
             # print("Error:", response.status_code)
-            
+
             search_keyword_comb.pop()
 
 
@@ -118,6 +110,6 @@ def get_dbpia_papers(search_keyword_list: list) -> list:
 # print(get_dbpia_papers("날개+선풍기+다이슨+날개+소음+발생+무게+전력+소비+에너지+효율"))
 # print(get_dbpia_papers("에너지+날개+효율+전력+소음+선풍기+무게+소비+다이슨+발생"))
 
-print(get_dbpia_papers([('카메라', 0.5805), ('렌즈', 0.4405), ('무선', 0.4336), ('디지털', 0.4151), 
-                        ('기기', 0.3814), ('방사', 0.3422), ('통신', 0.296), ('금속', 0.2955), 
-                        ('촬영', 0.2681), ('물질', 0.2553)]))
+# print(get_dbpia_papers([('카메라', 0.5805), ('렌즈', 0.4405), ('무선', 0.4336), ('디지털', 0.4151),
+#                         ('기기', 0.3814), ('방사', 0.3422), ('통신', 0.296), ('금속', 0.2955),
+#                         ('촬영', 0.2681), ('물질', 0.2553)]))
