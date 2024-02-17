@@ -5,6 +5,7 @@ import uvicorn
 from gpt.submit_gpt import submit_spec as submit_spec_gpt
 from similarity import routers as similarity_check
 
+
 app = FastAPI()
 
 
