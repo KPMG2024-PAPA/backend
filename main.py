@@ -8,7 +8,9 @@ from pydantic import BaseModel
 from researchpage.keybert_for_dashboard import keyword_extractor
 from researchpage.naver_news import naver_news
 from researchpage.dbpia_api import get_dbpia_papers
+from researchpage.dashboard_func import create_dashboard
 from similarity import routers as similarity_check
+import base64
 
 app = FastAPI()
 
@@ -76,14 +78,25 @@ class StrInput(BaseModel):
 @app.post("/research-page-main")
 async def keybert(input_data: StrInput):
     input_text = input_data.inputValue
+    
     print(input_text)
     # Now you can use input_text for your processing
     # Call the keyword_extractor function
     extracted_keywords = keyword_extractor(input_text)
+
     print(extracted_keywords)
 
     return {"message": f"{extracted_keywords}"}
 
+# 이부분
+@app.post("/research-page-sub-dashboards")
+async def submit_spec(input_data: ResearchInput):
+    input_text = input_data.inputValue
+    # Call the naver_news function
+    ipc_category_graph_image, ipc_subcategory_graph_image=create_dashboard(input_text)
+    return {"ipc_category_graph_image": ipc_category_graph_image,
+            "ipc_subcategory_graph_image": ipc_subcategory_graph_image
+            }
 
 @app.post("/research-page-sub-news")
 async def submit_spec(input_data: ResearchInput):
