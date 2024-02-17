@@ -28,6 +28,7 @@ def korea_top_similarity(query: str, n_results: int,  IPCs: List[str] = []):
     ids = result.get('ids', [[]])[0]
     distances = result.get('distances', [[]])[0]
     metadatas = result.get('metadatas', [[]])[0]
+    print('metadatas')
     IPC_codes = [ast.literal_eval(metadata.get('IPC_code_only')) for metadata in metadatas]
 
 
@@ -37,6 +38,8 @@ def korea_top_similarity(query: str, n_results: int,  IPCs: List[str] = []):
     # metadatas를 순회하며 필터링 조건에 맞는 문서 선택
     for id, distance, IPC_code, metadata in zip(ids, distances, IPC_codes, metadatas):
         # IPC_code 리스트와 unique_IPCs 리스트의 교집합이 있는지 확인
+        if metadata == None:
+            continue
         if any(ipc in unique_IPCs for ipc in IPC_code):
             # 아래 지수누나가 원하는 칼럼 넘겨주면 됨
             filtered_results.append({
@@ -75,6 +78,8 @@ def foreign_top_similarity(query: str, n_results: int,  IPCs: List[str] = []):
 
     # metadatas를 순회하며 필터링 조건에 맞는 문서 선택
     for id, distance, IPC_code, metadata in zip(ids, distances, IPC_codes, metadatas):
+        if metadata == None:
+            continue
         # IPC_code 리스트와 unique_IPCs 리스트의 교집합이 있는지 확인
         if any(ipc in unique_IPCs for ipc in IPC_code):
             # 아래 지수누나가 원하는 칼럼 넘겨주면 됨
