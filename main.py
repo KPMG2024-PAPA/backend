@@ -3,7 +3,7 @@ from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from gpt.submit_gpt import submit_spec as submit_spec_gpt
-
+from similarity import routers as similarity_check
 
 app = FastAPI()
 
@@ -51,6 +51,8 @@ async def submit_spec(text: str = Form(...), file: Optional[UploadFile] = File(N
         # Assuming you want to include the response from GPT in your API response
         "gpt_response": response
     }
+
+app.include_router(similarity_check.router)
 
 
 @app.get("/test")
