@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from researchpage.keybert_for_dashboard import keyword_extractor
 from researchpage.naver_news import naver_news
 from researchpage.dbpia_api import get_dbpia_papers
-
+from similarity import routers as similarity_check
 
 app = FastAPI()
 
@@ -102,6 +102,7 @@ async def submit_spec(input_data: ResearchInput):
 
     return {"message": papers}
 
+app.include_router(similarity_check.router)
 
 @app.get("/test")
 def test():
