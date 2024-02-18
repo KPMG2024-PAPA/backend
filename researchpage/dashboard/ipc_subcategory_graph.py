@@ -10,20 +10,20 @@ plt.matplotlib.rcParams['font.family'] = 'AppleGothic'
 font_path_title = "./researchpage/dashboard/data/Pretendard-ExtraBold.ttf"
 font_path_text = "./researchpage/dashboard/data/Pretendard-Medium.ttf"
 
-ipc_application_subcategory = pd.read_csv('./researchpage/dashboard/data/ipc_application_subcategory.csv')
+ipc_application_subcategory = pd.read_csv('./researchpage/dashboard/data/ipc_application_subcategory.csv', index_col=0)
 
 def ipc_subcategory_graph(ipc_subcategory: str) -> base64:  
    
-    """
-    gpt_classifier에서 A01과 같이 반환 받아
-    ipc_application_category.csv의 ipc_subcategory에 그대로 입력하고
-    base64로 인코딩된 이미지를 반환합니다.
+   """
+   gpt_classifier에서 A01과 같이 반환 받아
+   ipc_application_category.csv의 ipc_subcategory에 그대로 입력하고
+   base64로 인코딩된 이미지를 반환합니다.
 
-    """
-    custom_font_title = FontProperties(fname=font_path_title, size=20)
-    custom_font_text = FontProperties(fname=font_path_text, size=10)
-    
-    patent_class = {'A01': ['농업', '임업', '축산', '수렵', '포획', '어업'],
+   """
+   custom_font_title = FontProperties(fname=font_path_title, size=20)
+   custom_font_text = FontProperties(fname=font_path_text, size=10)
+   
+   patent_class = {'A01': ['농업', '임업', '축산', '수렵', '포획', '어업'],
  'A21': ['제빵；반죽 제조 또는 가공의 기계 혹은 설비；제빵용 반죽'],
  'A22': ['도살', '육처리', '가금 또는 어류의 처리'],
  'A23': ['식품 또는 식료품', '타류에 속하지 않는 그것들의 처리'],
@@ -165,28 +165,29 @@ def ipc_subcategory_graph(ipc_subcategory: str) -> base64:
  'H05': ['달리 분류되지 않는 전기기술'],
  'H10': ['반도체 장치', '달리 제공되지 않는 전기 고체 상태 장치']}
     
-    plt.rcParams['axes.spines.top'] = False
-    plt.rcParams['axes.spines.right'] = False
-        
-    # Plotting the time series data
-    plt.figure(figsize=(10, 6))  # Adjust the figure size if needed
-    plt.plot(ipc_application_subcategory.index, ipc_application_subcategory[ipc_subcategory], marker='o', linestyle='-', color="#b57dfa")  # Replace 'column_name' with the name of the column you want to plot
-    plt.title(f'소분류 {ipc_subcategory} 특허 출원 추이', fontproperties = custom_font_title)  # Add a title to the plot ;  fontweight='bold'; fontsize=30
-    plt.text(0.5, 0.95, ", ".join(patent_class[ipc_subcategory]),ha='center', fontproperties = custom_font_text, transform=plt.gca().transAxes)
-    plt.text(1, -0.1, "참고: IPSS 지식 재산 통계 서비스", ha='right', fontproperties = custom_font_text, transform=plt.gca().transAxes)
-    plt.xlabel('연도', fontproperties = custom_font_text)  # Add a label to the x-axis
-    plt.ylabel('소분류 출원 추이', fontproperties = custom_font_text)  # Add a label to the y-axis
-    plt.xticks(fontproperties=custom_font_text)
-    plt.yticks(fontproperties=custom_font_text) 
-    # plt.grid(True)  # Add grid lines
-    # plt.show()
+   plt.rcParams['axes.spines.top'] = False
+   plt.rcParams['axes.spines.right'] = False
+      
+   # Plotting the time series data
+   plt.figure(figsize=(10, 6))  # Adjust the figure size if needed
+   plt.plot(ipc_application_subcategory.index, ipc_application_subcategory[ipc_subcategory], marker='o', linestyle='-', color="#b57dfa")  # Replace 'column_name' with the name of the column you want to plot
+   plt.title(f'소분류 {ipc_subcategory} 특허 출원 추이', fontproperties = custom_font_title)  # Add a title to the plot ;  fontweight='bold'; fontsize=30
+   plt.text(0.5, 0.95, ", ".join(patent_class[ipc_subcategory]),ha='center', fontproperties = custom_font_text, transform=plt.gca().transAxes)
+   plt.text(1, -0.1, "참고: IPSS 지식 재산 통계 서비스", ha='right', fontproperties = custom_font_text, transform=plt.gca().transAxes)
+   plt.xlabel('연도', fontproperties = custom_font_text)  # Add a label to the x-axis
+   plt.ylabel('소분류 출원 추이', fontproperties = custom_font_text)  # Add a label to the y-axis
+   plt.xticks(fontproperties=custom_font_text)
+   plt.yticks(fontproperties=custom_font_text) 
+   # plt.grid(True)  # Add grid lines
+   #  plt.show()
     
-    img_bytes_io = io.BytesIO()
-    plt.savefig(img_bytes_io, format='png')
-    img_bytes_io.seek(0)
-    plt.close()  # Close the plot to free up memory
-    
-    # Encode the image to base64
-    img_base64 = base64.b64encode(img_bytes_io.getvalue()).decode()
-    
-    return img_base64
+   img_bytes_io = io.BytesIO()
+   plt.savefig(img_bytes_io, format='png')
+   img_bytes_io.seek(0)
+   plt.close()  # Close the plot to free up memory
+
+
+   # Encode the image to base64
+   img_base64 = base64.b64encode(img_bytes_io.getvalue()).decode()
+
+   return img_base64
