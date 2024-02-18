@@ -6,6 +6,12 @@ KPMG 2024 아이디어톤을 위한 백엔드
     - `pip install openai`
     - `pip install python-dotenv`
 
+- 준비
+    - `ssh -L [로컬에서 사용할 포트번호]:localhost:8888 kic@20.249.57.252`
+    - `chroma run --path [chromadb가 있는 폴더 경로] --host localhost --port 8888`
+    - `.env`파일 생성 및 셋팅
+
+
 - 실행
     - 터미널에서 `uvicorn main:app --reload`를 실행
     - <http://127.0.0.1:8000/docs>에서 API 문서 확인 가능
