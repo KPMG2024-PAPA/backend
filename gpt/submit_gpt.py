@@ -73,7 +73,7 @@ def submit_spec(summary, image_path):
         max_tokens=4096
     )
 
-    return f"[발명 요약] \n {sum} \n", "\n", response.choices[0].message.content
+    return f"[발명 요약] \n {summary} \n", "\n", response.choices[0].message.content
 
 
 # sum = input('발명 요약 : ')
