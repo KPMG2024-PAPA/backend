@@ -28,6 +28,8 @@ def naver_news(input: list) -> list:
 
     """
     options = webdriver.ChromeOptions()
+    # 창 숨기는 옵션 추가
+    options.add_argument("headless")
     driver = webdriver.Chrome(service=Service(
         ChromeDriverManager().install()), options=options)
 
@@ -69,6 +71,7 @@ def naver_news(input: list) -> list:
         temp.append(title_info[i]['href'])
         title_link.append(temp)
 
+    driver.quit()
     return title_link
 
 
