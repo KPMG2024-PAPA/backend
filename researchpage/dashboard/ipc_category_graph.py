@@ -12,7 +12,7 @@ plt.matplotlib.rcParams['font.family'] = 'AppleGothic'
 
 font_path_title = "./researchpage/dashboard/data/Pretendard-ExtraBold.ttf"
 font_path_text = "./researchpage/dashboard/data/Pretendard-Medium.ttf"
-ipc_application_category = pd.read_csv('./researchpage/dashboard/data/ipc_application_category.csv')
+ipc_application_category = pd.read_csv('./researchpage/dashboard/data/ipc_application_category.csv', index_col=0)
 
 
 def ipc_category_graph(ipc_category: str) -> base64:
